@@ -1,15 +1,38 @@
 import React from 'react';
-import * as rtl from '@testing-library/react';
 import * as dtl from '@testing-library/dom'
-import '@testing-library/jest-dom/extend-expect';
+import { withRouter } from 'react-router'
+import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
+import { render, fireEvent, cleanup } from '@testing-library/react'
+import DataDisp from './Components/DataDisp';
 import App from './App';
+import Login from './Components/Login';
 
-afterEach(rtl.cleanup);
+afterEach(cleanup)
 
-it('renders without crashing', () => {
-  const wrapper = rtl.render(<App />);
+function renderWithRouter(
+  ui,
+  {
+    route = '/',
+    history = createMemoryHistory({ initialEntries: [route] }),
+  } = {}
+) {
+  return {
+    ...render(<Router history={history}>{ui}</Router>),
+    history,
+  }
+};
 
-  wrapper.getByText(/Ingredients/);
-  wrapper.getByText(/home/);
-  wrapper.getByText(/login/);
-});
+test('full app rendering/navigating', () => {
+  const { container, getByText } = renderWithRouter(<App />)
+  expect(container.innerHTML).toMatch('Home')
+  const leftClick = { button: 0 }
+  fireEvent.click(getByText(/Login/i), leftClick)
+  expect(container.innerHTML).toMatch('Username:')
+})
+
+test('rendering a component that uses withRouter', () => {
+  const route = '/'
+  const { getByTestId } = renderWithRouter(<DataDisp list={[{"name":"Brisket","course":"Main","technique":"Sous-Vide","ingredients":["Smoked Salt","Prague Powder No. 1","Liquid Aminos","Chipotle Powder","Molassas"]}]}/>, { route })
+  expect(getByTestId('food0').textContent).toMatch(/Brisket/)
+})

@@ -4,10 +4,9 @@ class DataDisp extends React.Component {
   render(){
     return(
       <div>
-      {this.props.list.map(data=>{
+      {this.props.list.map((data,i)=>{
         return(
-          <div>
-            <h2>{data.name}</h2>
+          <div data-testid={`food${i}`}>{data.name}
             <h4>{data.course}</h4>
             <h5>{data.technique}</h5>
             <h3>Ingridients:</h3>
