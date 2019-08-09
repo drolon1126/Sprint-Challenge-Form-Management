@@ -13,6 +13,7 @@ class MyForm extends React.Component{
       <Form>
         <div>
           {this.props.errors.username && this.props.touched.username && <p>{this.props.errors.username}</p>}
+          <label for='username' data-testId = 'username'>Username:</label>
           <Field
             type="text"
             name="username"
@@ -21,6 +22,7 @@ class MyForm extends React.Component{
         </div>
         <div>
           {this.props.errors.password && this.props.touched.password && <p>{this.props.errors.password}</p>}
+          <label for='password' data-testId = 'password'>Password:</label>
           <Field
             type="password"
             name="password"
